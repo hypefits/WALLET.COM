@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>MoneyVault - Members</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Mobile Bottom Navigation -->
+    <nav class="mobile-nav">
+        <a href="dashboard.html" class="mobile-nav-item">
+            <span class="icon">📊</span>
+            <span>Dashboard</span>
+        </a>
+        <a href="debts.html" class="mobile-nav-item">
+            <span class="icon">💸</span>
+            <span>Debts</span>
+        </a>
+        <a href="members.html" class="mobile-nav-item active">
+            <span class="icon">👥</span>
+            <span>Members</span>
+        </a>
+        <a href="settings.html" class="mobile-nav-item">
+            <span class="icon">⚙️</span>
+            <span>Settings</span>
+        </a>
+    </nav>
+
+    <div class="app-container">
+        <!-- Desktop Sidebar -->
+        <aside class="sidebar desktop-only">
+            <div class="sidebar-header">
+                <div class="logo-mini">💰</div>
+                <h3>MoneyVault</h3>
+            </div>
+            <nav class="nav-menu">
+                <a href="dashboard.html" class="nav-item">
+                    <span class="icon">📊</span>
+                    <span>Dashboard</span>
+                </a>
+                <a href="debts.html" class="nav-item">
+                    <span class="icon">💸</span>
+                    <span>Debts</span>
+                </a>
+                <a href="members.html" class="nav-item active">
+                    <span class="icon">👥</span>
+                    <span>Members</span>
+                </a>
+                <a href="settings.html" class="nav-item">
+                    <span class="icon">⚙️</span>
+                    <span>Settings</span>
+                </a>
+                <a href="#" class="nav-item" onclick="logout()">
+                    <span class="icon">🚪</span>
+                    <span>Logout</span>
+                </a>
+            </nav>
+            <div class="user-info">
+                <div class="user-avatar">👤</div>
+                <div class="user-details">
+                    <span class="user-name" id="currentUser">Admin</span>
+                    <span class="user-role" id="userRole">Administrator</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content mobile-content">
+            <div class="page-header">
+                <h1>Member Management</h1>
+                <p>Add and manage family members or users</p>
+            </div>
+
+            <!-- Add Member Form -->
+            <div class="card animate-fadeIn">
+                <div class="card-header">
+                    <h2>Add New Member</h2>
+                </div>
+                <div class="card-body">
+                    <form id="memberForm" class="member-form">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Member Name</label>
+                                <input type="text" id="memberName" placeholder="Enter name" required>
+                            </div>
+                            <div class="form-group">
+                                <label>PIN Code</label>
+                                <input type="password" id="memberPin" placeholder="4-6 digits" maxlength="6" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Role</label>
+                                <select id="memberRole" required>
+                                    <option value="user">Normal User</option>
+                                    <option value="admin">Administrator</option>
+                                </select>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary">
+                            <span>➕</span> Add Member
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Members List -->
+            <div class="card animate-fadeIn">
+                <div class="card-header">
+                    <h2>Current Members</h2>
+                    <span class="member-count" id="memberCount">0 Members</span>
+                </div>
+                <div class="card-body">
+                    <div class="members-grid" id="membersList">
+                        <!-- Members will be loaded here -->
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Edit Member Modal -->
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Edit Member</h3>
+                <button class="close-btn" onclick="closeEditModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="editMemberForm">
+                    <div class="form-group">
+                        <label>Name</label>
+                        <input type="text" id="editName" required>
+                    </div>
+                    <div class="form-group">
+                        <label>New PIN (leave empty to keep current)</label>
+                        <input type="password" id="editPin" maxlength="6">
+                    </div>
+                    <div class="form-group">
+                        <label>Role</label>
+                        <select id="editRole">
+                            <option value="user">Normal User</option>
+                            <option value="admin">Administrator</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeEditModal()">Cancel</button>
+                <button class="btn btn-primary" onclick="updateMember()">Save Changes</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="auth.js"></script>
+    <script src="members.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            checkAuth();
+            checkAdminAuth();
+            loadMembers();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>MoneyVault - Debts</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Mobile Bottom Navigation -->
+    <nav class="mobile-nav">
+        <a href="dashboard.html" class="mobile-nav-item">
+            <span class="icon">📊</span>
+            <span>Dashboard</span>
+        </a>
+        <a href="debts.html" class="mobile-nav-item active">
+            <span class="icon">💸</span>
+            <span>Debts</span>
+        </a>
+        <a href="members.html" class="mobile-nav-item">
+            <span class="icon">👥</span>
+            <span>Members</span>
+        </a>
+        <a href="settings.html" class="mobile-nav-item">
+            <span class="icon">⚙️</span>
+            <span>Settings</span>
+        </a>
+    </nav>
+
+    <div class="app-container">
+        <!-- Desktop Sidebar -->
+        <aside class="sidebar desktop-only">
+            <div class="sidebar-header">
+                <div class="logo-mini">💰</div>
+                <h3>MoneyVault</h3>
+            </div>
+            <nav class="nav-menu">
+                <a href="dashboard.html" class="nav-item">
+                    <span class="icon">📊</span>
+                    <span>Dashboard</span>
+                </a>
+                <a href="debts.html" class="nav-item active">
+                    <span class="icon">💸</span>
+                    <span>Debts</span>
+                </a>
+                <a href="members.html" class="nav-item">
+                    <span class="icon">👥</span>
+                    <span>Members</span>
+                </a>
+                <a href="settings.html" class="nav-item">
+                    <span class="icon">⚙️</span>
+                    <span>Settings</span>
+                </a>
+                <a href="#" class="nav-item" onclick="logout()">
+                    <span class="icon">🚪</span>
+                    <span>Logout</span>
+                </a>
+            </nav>
+            <div class="user-info">
+                <div class="user-avatar">👤</div>
+                <div class="user-details">
+                    <span class="user-name" id="currentUser">User</span>
+                    <span class="user-role" id="userRole">Member</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content mobile-content">
+            <!-- Current Date and Day -->
+            <div class="date-display">
+                <div class="current-date">
+                    <span class="date-icon">📅</span>
+                    <span id="currentDateDisplay"></span>
+                </div>
+                <div class="current-day">
+                    <span class="day-icon">🗓️</span>
+                    <span id="currentDayDisplay"></span>
+                </div>
+            </div>
+
+            <!-- Top Stats Cards -->
+            <div class="stats-container">
+                <div class="stat-card animate-slideIn">
+                    <div class="stat-icon debt">💸</div>
+                    <div class="stat-info">
+                        <span class="stat-label">Total Owed</span>
+                        <span class="stat-value" id="totalOwed">₹0</span>
+                    </div>
+                </div>
+                <div class="stat-card animate-slideIn" style="animation-delay: 0.1s">
+                    <div class="stat-icon lent">💰</div>
+                    <div class="stat-info">
+                        <span class="stat-label">Total Lent</span>
+                        <span class="stat-value" id="totalLent">₹0</span>
+                    </div>
+                </div>
+                <div class="stat-card animate-slideIn" style="animation-delay: 0.2s">
+                    <div class="stat-icon balance">⚖️</div>
+                    <div class="stat-info">
+                        <span class="stat-label">Net Balance</span>
+                        <span class="stat-value" id="netBalance">₹0</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Add Debt Section -->
+            <div class="card animate-fadeIn">
+                <div class="card-header">
+                    <h2>💰 Quick Add Debt</h2>
+                    <p class="card-subtitle">Track money you borrowed or lent</p>
+                </div>
+                <div class="card-body">
+                    <!-- Debt Type Selection -->
+                    <div class="debt-type-selector">
+                        <button type="button" class="debt-type-btn active" onclick="selectDebtType('borrowed')">
+                            <div class="debt-type-icon">⬇️</div>
+                            <div class="debt-type-text">
+                                <strong>I Borrowed</strong>
+                                <small>Someone lent me money</small>
+                            </div>
+                        </button>
+                        <button type="button" class="debt-type-btn" onclick="selectDebtType('lent')">
+                            <div class="debt-type-icon">⬆️</div>
+                            <div class="debt-type-text">
+                                <strong>I Lent</strong>
+                                <small>I gave money to someone</small>
+                            </div>
+                        </button>
+                    </div>
+
+                    <form id="debtForm" class="debt-form">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Person's Name</label>
+                                <input type="text" id="personName" placeholder="e.g., John, Mom, Friend" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Amount (₹)</label>
+                                <input type="number" id="debtAmount" placeholder="5000" step="0.01" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>What for?</label>
+                                <input type="text" id="debtDesc" placeholder="e.g., Lunch, Movie tickets, Emergency" required>
+                            </div>
+                            <div class="form-group">
+                                <label>When to return?</label>
+                                <input type="date" id="dueDate" required>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-full">
+                            <span>➕</span> Add Debt Record
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Debt Summary Cards -->
+            <div class="debt-summary-cards">
+                <div class="summary-card borrowed">
+                    <div class="summary-icon">⬇️</div>
+                    <div class="summary-content">
+                        <h3>₹<span id="borrowedTotal">0</span></h3>
+                        <p>Money I Borrowed</p>
+                        <small id="borrowedCount">0 debts</small>
+                    </div>
+                </div>
+                <div class="summary-card lent">
+                    <div class="summary-icon">⬆️</div>
+                    <div class="summary-content">
+                        <h3>₹<span id="lentTotal">0</span></h3>
+                        <p>Money I Lent</p>
+                        <small id="lentCount">0 debts</small>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Debts -->
+            <div class="card animate-fadeIn">
+                <div class="card-header">
+                    <h2>📋 Recent Debts</h2>
+                    <div class="filter-controls">
+                        <select id="filterDebtType" onchange="filterDebts()">
+                            <option value="all">All Debts</option>
+                            <option value="borrowed">I Borrowed</option>
+                            <option value="lent">I Lent</option>
+                        </select>
+                        <select id="filterDebtStatus" onchange="filterDebts()">
+                            <option value="all">All Status</option>
+                            <option value="pending">Pending</option>
+                            <option value="paid">Paid</option>
+                            <option value="overdue">Overdue</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div id="debtsList" class="debts-list">
+                        <!-- Debts will be loaded here -->
+                    </div>
+                    <div id="noDebtMsg" class="no-data-msg">
+                        <span>💰</span>
+                        <p>No debt records yet. Add your first debt above!</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Notification Bell -->
+    <div class="notification-bell" onclick="toggleNotificationPanel()">
+        <span class="bell-icon">🔔</span>
+        <span class="notification-count" id="notificationCount"></span>
+    </div>
+
+    <!-- Notification Panel -->
+    <div class="notification-panel" id="notificationPanel">
+        <div class="notification-header">
+            <span>Notifications</span>
+            <button class="notification-close" onclick="closeNotificationPanel()">×</button>
+        </div>
+        <div class="notification-list" id="notificationList">
+            <!-- Notifications will be loaded here -->
+        </div>
+    </div>
+
+    <script src="auth.js"></script>
+    <script src="debts.js"></script>
+    <script>
+        // Initialize debts page
+        document.addEventListener('DOMContentLoaded', function() {
+            checkAuth();
+            initDebtsPage();
+            loadDebts();
+            updateDebtStats();
+        });
+    </script>
+</body>
+</html>

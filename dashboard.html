@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>MoneyVault - Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Mobile Bottom Navigation -->
+    <nav class="mobile-nav">
+        <a href="dashboard.html" class="mobile-nav-item active">
+            <span class="icon">📊</span>
+            <span>Dashboard</span>
+        </a>
+        <a href="debts.html" class="mobile-nav-item">
+            <span class="icon">💸</span>
+            <span>Debts</span>
+        </a>
+        <a href="members.html" class="mobile-nav-item" id="membersLink">
+            <span class="icon">👥</span>
+            <span>Members</span>
+        </a>
+        <a href="settings.html" class="mobile-nav-item" id="settingsLink">
+            <span class="icon">⚙️</span>
+            <span>Settings</span>
+        </a>
+    </nav>
+
+    <div class="app-container">
+        <!-- Desktop Sidebar -->
+        <aside class="sidebar desktop-only">
+            <div class="sidebar-header">
+                <div class="logo-mini">💰</div>
+                <h3>MoneyVault</h3>
+            </div>
+            <nav class="nav-menu">
+                <a href="dashboard.html" class="nav-item active">
+                    <span class="icon">📊</span>
+                    <span>Dashboard</span>
+                </a>
+                <a href="debts.html" class="nav-item">
+                    <span class="icon">💸</span>
+                    <span>Debts</span>
+                </a>
+                <a href="members.html" class="nav-item" id="membersLink">
+                    <span class="icon">👥</span>
+                    <span>Members</span>
+                </a>
+                <a href="settings.html" class="nav-item" id="settingsLink">
+                    <span class="icon">⚙️</span>
+                    <span>Settings</span>
+                </a>
+                <a href="#" class="nav-item" onclick="logout()">
+                    <span class="icon">🚪</span>
+                    <span>Logout</span>
+                </a>
+            </nav>
+            <div class="user-info">
+                <div class="user-avatar">👤</div>
+                <div class="user-details">
+                    <span class="user-name" id="currentUser">User</span>
+                    <span class="user-role" id="userRole">Member</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content mobile-content">
+            <!-- Current Date and Day -->
+            <div class="date-display">
+                <div class="current-date">
+                    <span class="date-icon">📅</span>
+                    <span id="currentDateDisplay"></span>
+                </div>
+                <div class="current-day">
+                    <span class="day-icon">🗓️</span>
+                    <span id="currentDayDisplay"></span>
+                </div>
+            </div>
+
+            <!-- Top Stats Cards -->
+            <div class="stats-container">
+                <div class="stat-card animate-slideIn">
+                    <div class="stat-icon income">💵</div>
+                    <div class="stat-info">
+                        <span class="stat-label">Total Income</span>
+                        <span class="stat-value" id="totalIncome">₹0</span>
+                    </div>
+                </div>
+                <div class="stat-card animate-slideIn" style="animation-delay: 0.1s">
+                    <div class="stat-icon expense">💸</div>
+                    <div class="stat-info">
+                        <span class="stat-label">Total Expense</span>
+                        <span class="stat-value" id="totalExpense">₹0</span>
+                    </div>
+                </div>
+                <div class="stat-card animate-slideIn" style="animation-delay: 0.2s">
+                    <div class="stat-icon balance">💰</div>
+                    <div class="stat-info">
+                        <span class="stat-label">Balance</span>
+                        <span class="stat-value" id="balance">₹0</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Add Transaction Section -->
+            <div class="card animate-fadeIn">
+                <div class="card-header">
+                    <h2>Add Transaction</h2>
+                </div>
+                <div class="card-body">
+                    <form id="transactionForm" class="transaction-form">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Date</label>
+                                <input type="date" id="transDate" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Type</label>
+                                <select id="transType" required>
+                                    <option value="income">Income 💵</option>
+                                    <option value="expense">Expense 💸</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Description</label>
+                                <input type="text" id="transDesc" placeholder="Enter description" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Amount (₹)</label>
+                                <input type="number" id="transAmount" placeholder="0.00" step="0.01" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Payment Method</label>
+                                <select id="transMethod" required onchange="toggleBankField()">
+                                    <option value="cash">Cash 💵</option>
+                                    <option value="online">Online 💳</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-row" id="bankField" style="display: none;">
+                            <div class="form-group">
+                                <label>Bank</label>
+                                <select id="transBank">
+                                    <option value="kotak">Kotak Mahindra Bank 🏦</option>
+                                    <option value="sbi">State Bank of India 🏛️</option>
+                                </select>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary">
+                            <span>➕</span> Add Transaction
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Transactions Table -->
+            <div class="card animate-fadeIn">
+                <div class="card-header">
+                    <h2>Recent Transactions</h2>
+                    <div class="filter-controls">
+                        <select id="filterType" onchange="filterTransactions()">
+                            <option value="all">All Types</option>
+                            <option value="income">Income Only</option>
+                            <option value="expense">Expense Only</option>
+                        </select>
+                        <select id="filterMember" onchange="filterTransactions()">
+                            <option value="all">All Members</option>
+                        </select>
+                        <button class="btn btn-secondary" onclick="exportToExcel()">
+                            <span>📊</span> Export Excel
+                        </button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Description</th>
+                                    <th>Type</th>
+                                    <th>Method</th>
+                                    <th>Bank</th>
+                                    <th>Amount</th>
+                                    <th>Details</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="transactionsList">
+                                <!-- Transactions will be loaded here -->
+                            </tbody>
+                        </table>
+                        <div id="noDataMsg" class="no-data-msg">
+                            <span>📝</span>
+                            <p>No transactions yet. Add your first transaction above!</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Notification Bell -->
+    <div class="notification-bell" onclick="toggleNotificationPanel()">
+        <span class="bell-icon">🔔</span>
+        <span class="notification-count" id="notificationCount"></span>
+    </div>
+
+    <!-- Notification Panel -->
+    <div class="notification-panel" id="notificationPanel">
+        <div class="notification-header">
+            <span>Notifications</span>
+            <button class="notification-close" onclick="closeNotificationPanel()">×</button>
+        </div>
+        <div class="notification-list" id="notificationList">
+            <!-- Notifications will be loaded here -->
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="auth.js"></script>
+    <script src="data.js"></script>
+    <script src="ui.js"></script>
+    <script>
+        // Initialize dashboard
+        document.addEventListener('DOMContentLoaded', function() {
+            checkAuth();
+            initDashboard();
+            loadTransactions();
+            updateStats();
+        });
+    </script>
+</body>
+</html>
